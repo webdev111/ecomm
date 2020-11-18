@@ -1,4 +1,4 @@
-const { check } = require("express-validator");
+const { check, body } = require("express-validator");
 const usersdb = require("../../repos/users");
 
 module.exports = {
@@ -63,10 +63,7 @@ module.exports = {
         throw new Error("invalid password");
       }
     }),
-  productName: check("title")
-    .trim()
-    .notEmpty()
-    .withMessage("name is required"),
+  productName: check("title").trim().notEmpty().withMessage("name is required"),
   productPrice: check("price")
     .trim()
     .notEmpty()
@@ -75,4 +72,11 @@ module.exports = {
     .toFloat()
     .isFloat()
     .withMessage("invalid price"),
+  productImage: check("image").custom((val,{req})=>{
+    if (!req.file) {
+      throw new Error('image is required');
+    }else{
+      return true
+    }
+  }),
 };
